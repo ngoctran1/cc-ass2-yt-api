@@ -11,6 +11,10 @@ router.get('/trending', function (req, res) {
     return youtube.getTrending();
 });
 
+router.get('/sqlTest', function (req, res) {
+    return youtube.testConnect();
+});
+
 router.get('/history', (req, res) => {
 res
     .status(200)
