@@ -1,5 +1,5 @@
 const axios = require('axios');
-const API_KEY='AIzaSyBayqL1DhIiVrBO7PrxgWYcnj4i0z7CZP0';
+const API_KEY=process.env.YT_API_KEY;
 
 const trendingURL = 'https://www.googleapis.com/youtube/v3/videos?part=status%2C%20snippet&chart=mostPopular&maxResults=5&regionCode='
 const regionURL = 'https://www.googleapis.com/youtube/v3/i18nRegions?part=snippet&key=';
