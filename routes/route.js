@@ -1,4 +1,3 @@
-const express = require('express');
 const youtube = require('../youtube');
 const AsyncRouter = require("express-async-router").AsyncRouter;
 const router = AsyncRouter();

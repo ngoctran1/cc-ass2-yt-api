@@ -1,6 +1,0 @@
-swagger: "2.0"
-info:
-  description: "API to serve data to Youtube Trending Video Map"
-  title: "Youtube Trending Video Map API"
-  version: "1.0.0"
-host: "cc-ass2-yt-api"

@@ -1,0 +1,30 @@
+swagger: "2.0"
+info:
+  description: "API to serve data to Youtube Trending Video Map"
+  title: "Youtube Trending Video Map API"
+  version: "1.0.0"
+host: "<GCLOUD PROJECT ID>.appspot.com"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+schemes:
+- "https"
+paths:
+  "/countryIDs":
+    get:
+      description: "Lists all country IDs as defined by YouTube."
+      operationId: "countryids"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "List of country IDs"
+          schema:
+            $ref: "#/definitions/countryids"
+definitions:
+  countryids:
+    type: "object"
+    properties:
+      message:
+        type: "string"
