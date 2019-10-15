@@ -42,7 +42,7 @@ Before starting, ensure that you have a Google account and have created a billin
     - In a terminal (Unix) or Git Bash (Windows): `git clone https://github.com/s3688394/cc-ass2-yt-api.git`
 2. Navigate to the **cc-ass2-yt-api** folder.
 3. Copy every file ending in `.example` and rename them withoout the `.example`. There are three such files:
-    - `.env_example` -> `.env`
+    - `.env.example` -> `.env`
     - `app.yaml.example` -> `app.yaml`
     - `openapi-appengine.yaml.example` -> `openapi-appengine.yaml`
 4. In the two `.yaml` files, replace `<GCLOUD PROJECT ID>` with your project-id from step 3 of the **Create New Google Cloud Project** section above.
