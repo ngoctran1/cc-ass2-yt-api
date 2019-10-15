@@ -4,3 +4,6 @@ env: flex
 endpoints_api_service:
   name: <GCLOUD PROJECT ID>.appspot.com
   rollout_strategy: managed
+
+beta_settings:
+  cloud_sql_instances: <INSTANCE CONNECTION NAME>
