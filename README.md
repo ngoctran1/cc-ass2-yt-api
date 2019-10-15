@@ -57,4 +57,3 @@ Before starting, ensure that you have a Google account and have created a billin
     - `gcloud app deploy`
 
 The API is now deployed. The link your API is accessed from can be found by going to the [Google Cloud Endpoints](https://console.cloud.google.com/endpoints) page and looking at **Service Name**. The available methods can be found in the **Method** section at the bottom of that page.
-
