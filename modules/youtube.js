@@ -5,8 +5,10 @@ const API_KEY=process.env.YT_API_KEY;
 
 const trendingURL = 'https://www.googleapis.com/youtube/v3/videos?part=status%2C%20snippet&chart=mostPopular&maxResults=5&regionCode=';
 const regionURL = 'https://www.googleapis.com/youtube/v3/i18nRegions?part=snippet&key=';
+const vidStatURL = 'https://www.googleapis.com/youtube/v3/videos?part=statistics&id=';
 
 const regionCodes = new Map();
+const videos = new Set();
 
 async function queryYoutube(URL) {        
     const result = await axios.get(URL)
@@ -22,23 +24,27 @@ async function queryYoutube(URL) {
 
 module.exports = {
     getTrending: async function(regions) {
-        let result = [];
+        let result = new Map();
+
         for(let code of regionCodes) {
-            queryResult = await queryYoutube(trendingURL + code.gl + "&key=" + API_KEY);
+            let cid = code[0];
+            queryResult = await queryYoutube(trendingURL + cid + "&key=" + API_KEY);
+
+            let regionVideos = [];
             for(let i in queryResult.items) {
-                if(queryResult.items[i].snippet.thumbnails.maxres) {
-                    result.push(queryResult.items[i].snippet.thumbnails.maxres.url);
-                } else {
-                    result.push(queryResult.items[i].snippet.thumbnails.default.url);
-                }
+                regionVideos.push({
+                    vid: queryResult.items[i].id,
+                    name: queryResult.items[i].snippet.title
+                });
+                videos.add(queryResult.items[i].id);
             }
+
+            result.set(cid, regionVideos);
         }
-        output = "";
-        for(let i in result) {
-            output += "<img width=\"200\" src='" + result[i] + "' />";
-            console.log(output);
-        }
-        return output;
+
+        console.log(result);
+        await sql.saveTrending(result);
+        this.updateVideoStat();
     },
     getRegions: async function() {
         result = await queryYoutube(regionURL + API_KEY);
@@ -47,5 +53,13 @@ module.exports = {
         }
         console.log(regionCodes.size);
         sql.saveRegions(regionCodes);
+    },
+    updateVideoStat: async function() {
+        console.log("Update Video Stat");
+        for(let vid of videos) {
+            console.log("VId = " + vid);
+            let result = await queryYoutube(vidStatURL + vid + "&key=" + API_KEY);
+            console.log(result);
+        }
     }
 }
