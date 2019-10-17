@@ -11,20 +11,103 @@ produces:
 schemes:
 - "https"
 paths:
-  "/countryIDs":
+  "/countryids":
     get:
-      description: "Lists all country IDs as defined by YouTube."
+      description: "Lists all country Ids as defined by YouTube."
       operationId: "countryids"
       produces:
       - "application/json"
       responses:
         200:
-          description: "List of country IDs"
+          description: "List of country Ids"
           schema:
             $ref: "#/definitions/countryids"
+  "/trendingvideos":
+    get:
+      description: "List all trending videos being tracked by the API for given set of regions"
+      operationId: "trendingvideos"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Input requires an array of country Ids"
+        required: true
+        schema:
+          $ref: "#/definitions/inputregions"
+      responses:
+        200:
+          description: "List of trending videos seperated into regions"
+          schema:
+            $ref: "#/definitions/trendingvideos"
+  "/videoviews":
+    get:
+      description: "List all view data points stored by the API for given set of videos"
+      operationId: "videoviews"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Input requires an array of video"
+        required: true
+        schema:
+          $ref: "#/definitions/inputvideos"
+      responses:
+        200:
+          description: "List of trending videos seperated into regions"
+          schema:
+            $ref: "#/definitions/videoviews"
 definitions:
   countryids:
-    type: "object"
-    properties:
-      message:
-        type: "string"
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        cid:
+          type: "string"
+        name:
+          type: "string"
+        longitude:
+          type: "number"
+          format: "double"
+        latitude:
+          type: "number"
+          format: "double"
+  trendingvideos:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        cid:
+          type: "string"
+        vids:
+          type: "array"
+          items:
+            type: "string"
+  videoviews:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        vid:
+          type: "string"
+        viewdata:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              date:
+                type: "string"
+                format: "date"
+              views:
+                type: "number"
+                format: "int64"
+  inputregions:
+    type: "array"
+    items:
+      type: "string"
+  inputvideos:
+    type: "array"
+    items:
+      type: "string"
