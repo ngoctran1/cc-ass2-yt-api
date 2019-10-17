@@ -51,7 +51,7 @@ module.exports = {
         for(let i in result.items) {
             regionCodes.set(result.items[i].snippet.gl, result.items[i].snippet.name);
         }
-        console.log(regionCodes.size);
+        console.log("Received " + regionCodes.size + " regions from YouTube API");
         sql.saveRegions(regionCodes);
     },
     updateVideoStat: async function() {

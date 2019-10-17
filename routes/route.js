@@ -2,7 +2,7 @@ const sql = require('../modules/sql');
 const AsyncRouter = require("express-async-router").AsyncRouter;
 const router = AsyncRouter();
 
-router.get('/countryIDs', async function (req, res) {
+router.get('/countryids', async function (req, res) {
     res.json(await sql.getRegions());
 });
 

@@ -17,12 +17,25 @@ async function updateData() {
   return;
 }
 
-async function initialise() {
-  await sql.setupTables();
-  await sql.setupVideoDB();
+async function initialiseRegions() {
+  let regions = await sql.getRegions();
+
+  if(regions.length == 0) {
+    console.log("No regions detected, initialising...");
+    await youtube.getRegions();
+  } else {
+    console.log("Exisitng regions detected in SQL table CountryID");
+    console.log(regions);
+  }
 }
 
-initialise();
+async function initialiseSQL() {
+  await sql.setupTables();
+  await sql.setupVideoDB();
+  await initialiseRegions();
+}
+
+initialiseSQL();
 setInterval(updateData, DAY_HOURS * HOUR_TO_MSEC);
 
 // Start the server
