@@ -1,7 +1,7 @@
 # YouTube Trending Videos API
 
 ## About
-API backend for use with YouTube Trending Videos Map. Retrieves, stores, and tracks details of trending videos from regions across the globe.
+API backend for use with [YouTube Trending Videos Map](https://github.com/linh803/cc-a2-frontend). Retrieves, stores, and tracks details of trending videos from regions across the globe.
 
 ## Google Cloud Deployment Instructions
 Before starting, ensure that you have a Google account and have created a billing account for the Google Cloud services. Also ensure that you have the [Google Cloud SDK](https://cloud.google.com/sdk/) installed on your computer.
