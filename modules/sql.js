@@ -1,6 +1,5 @@
 const axios = require('axios');
 const mysql = require('mysql2/promise');
-const API_KEY=process.env.YT_API_KEY;
 const pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
@@ -15,6 +14,7 @@ const pool = mysql.createPool({
 
     connectionLimit : 10
 });
+const API_KEY=process.env.API_KEY;
 
 // Reference: https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly/32648526
 // Used to ensure safe string values when inserting into SQL database

@@ -1,7 +1,7 @@
 const axios = require('axios');
 const sql = require('./sql');
 
-const API_KEY=process.env.YT_API_KEY;
+const API_KEY=process.env.API_KEY;
 
 const trendingURL = 'https://www.googleapis.com/youtube/v3/videos?part=status%2C%20snippet&chart=mostPopular&maxResults=5&regionCode=';
 const regionURL = 'https://www.googleapis.com/youtube/v3/i18nRegions?part=snippet&key=';

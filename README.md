@@ -51,7 +51,7 @@ Before starting, ensure that you have a Google account and have created a billin
     - `openapi-appengine.yaml.example` -> `openapi-appengine.yaml`
 5. In the above files, go through and replace the placeholders with the required values from the previous sections above:
     - `<GCLOUD PROJECT ID>` = project-id from step 3 of **Create New Google Cloud Project**.
-    - `<YOUTUBE API KEY>` = API key from step 6 of **Enable Google Cloud APIs and setup API Key**.
+    - `<API KEY>` = API key from step 6 of **Enable Google Cloud APIs and setup API Key**.
     - `<USER>` and `<USER PASSWORD>` = user and password from step 4 of **Initialise SQL Database**.
     - `<INSTANCE CONNECTION NAME>` = instance connection name from step 5 of **Initialise SQL Database**.
 6. Deploy Google Cloud Endpoints configuration by running the following in a terminal:
