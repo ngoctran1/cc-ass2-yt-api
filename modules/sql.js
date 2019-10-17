@@ -37,15 +37,5 @@ module.exports = {
                 }
             });
         });
-
-        // Terminate all connections
-        // pool.end(function (err) {
-        //     if (err) {
-        //         console.log("Failed to close connections");
-        //         throw err;
-        //     } else {
-        //         console.log("Successfully closed connections");
-        //     }
-        // });
     }
 }

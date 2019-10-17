@@ -9,7 +9,7 @@ const youtube = require('./modules/youtube');
 const DAY_HOURS = 24;
 const HOUR_TO_MSEC = 60 * 60 * 1000;
 
-setInterval(youtube.getRegions(), DAY_HOURS * HOUR_TO_MSEC);
+setInterval(youtube.getRegions, DAY_HOURS * HOUR_TO_MSEC);
 
 // Start the server
 const PORT = process.env.PORT || 8080;
