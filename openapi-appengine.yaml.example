@@ -3,7 +3,7 @@ info:
   description: "API to serve data to Youtube Trending Video Map"
   title: "Youtube Trending Video Map API"
   version: "1.0.0"
-host: "<GCLOUD PROJECT ID>.com"
+host: "<GCLOUD PROJECT ID>.appspot.com"
 consumes:
 - "application/json"
 produces:
@@ -22,10 +22,30 @@ paths:
           description: "List of country Ids"
           schema:
             $ref: "#/definitions/countryids"
-  "/trendingvideos":
+  "/toptrendingvideos":
+    get:
+      description: "List top trending videos being tracked by the API for a given country"
+      operationId: "toptrendingvideos"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Input is a country Id"
+        required: true
+        schema:
+          $ref: "#/definitions/inputregions"
+      responses:
+        200:
+          description: "List of trending videos for the given country"
+          schema:
+            $ref: "#/definitions/trendingvideos"
+  "/alltrendingvideos":
     get:
       description: "List all trending videos being tracked by the API for a given country"
-      operationId: "trendingvideos"
+      operationId: "alltrendingvideos"
       consumes:
       - "application/json"
       produces:

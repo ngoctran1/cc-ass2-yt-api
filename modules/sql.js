@@ -62,7 +62,7 @@ async function getRegionLocation(cid) {
 
 module.exports = {
     setupTables: async function() {
-        pool.query(`CREATE TABLE IF NOT EXISTS countryID(cid CHAR(2), name CHAR(255), longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (cid));`, function(err, response) {
+        await pool.query(`CREATE TABLE IF NOT EXISTS countryID(cid CHAR(2), name CHAR(255), longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (cid));`, function(err, response) {
             if(err) {
                 throw err;
             } else {
@@ -70,7 +70,7 @@ module.exports = {
             }
         });
 
-        pool.query(`CREATE TABLE IF NOT EXISTS videoID(vid CHAR(100), name CHAR(255), PRIMARY KEY (vid));`, function(err, response) {
+        await pool.query(`CREATE TABLE IF NOT EXISTS videoID(vid CHAR(100), name CHAR(255), PRIMARY KEY (vid));`, function(err, response) {
             if(err) {
                 console.log("Creating vid table failed");
                 throw err;
@@ -82,7 +82,7 @@ module.exports = {
         return;
     },
     setupVideoDB: async function() {
-        pool.query(`CREATE TABLE IF NOT EXISTS regionTrending(cid CHAR(2), vid CHAR(100), date DATETIME, PRIMARY KEY (cid, vid), FOREIGN KEY(cid) 
+        await pool.query(`CREATE TABLE IF NOT EXISTS regionTrending(cid CHAR(2), vid CHAR(100), date DATETIME, PRIMARY KEY (cid, vid), FOREIGN KEY(cid) 
         REFERENCES countryID(cid), FOREIGN KEY(vid) REFERENCES videoID(vid));`, function(err, response) {
             if(err) {
                 console.log("Creating regionTrending table failed");
@@ -92,7 +92,7 @@ module.exports = {
             }
         });
 
-        pool.query(`CREATE TABLE IF NOT EXISTS videoStat(vid CHAR(100), date DATETIME, views BIGINT, PRIMARY KEY (vid, date), FOREIGN KEY(vid) 
+        await pool.query(`CREATE TABLE IF NOT EXISTS videoStat(vid CHAR(100), date DATETIME, views BIGINT, PRIMARY KEY (vid, date), FOREIGN KEY(vid) 
         REFERENCES videoID(vid));`, function(err, response) {
             if(err) {
                 console.log("Creating videoStat table failed");
@@ -182,18 +182,18 @@ module.exports = {
     getCurrentTrending: async function(cid) {
         let response;
         if(cid) {
-            response = await pool.query(`SELECT * from regionTrending WHERE cid="${cid}" ORDER BY date LIMIT 5;`);
+            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending WHERE cid="${cid}" ORDER BY date LIMIT 5;`);
         } else {
-            response = await pool.query(`SELECT * from regionTrending;`);
+            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending;`);
         }
         return response[0];
     },
     getAllTrending: async function(cid) {
         let response;
         if(cid) {
-            response = await pool.query(`SELECT * from regionTrending WHERE cid="${cid}" ORDER BY date;`);
+            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending WHERE cid="${cid}" ORDER BY date;`);
         } else {
-            response = await pool.query(`SELECT * from regionTrending;`);
+            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending;`);
         }
         return response[0];
     }
