@@ -17,22 +17,19 @@ async function updateData() {
   return;
 }
 
-async function initialiseRegions() {
+async function initialise() {
   let regions = await sql.getRegions();
 
   if(regions.length == 0) {
     console.log("No regions detected, initialising...");
-    await youtube.getRegions();
-  } else {
-    console.log("Exisitng regions detected in SQL table CountryID");
-    console.log(regions);
+    await updateData();
   }
 }
 
 async function initialiseSQL() {
   await sql.setupTables();
   await sql.setupVideoDB();
-  await initialiseRegions();
+  await initialise();
 }
 
 initialiseSQL();

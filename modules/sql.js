@@ -128,7 +128,6 @@ module.exports = {
     saveTrending: async function(trendingVideos) {
         trendingVideos.forEach((videos, cid) => {
             for(let i in videos) {
-                console.log("Trying: " + `INSERT INTO videoID(vid, name) VALUES ("` + videos[i].vid +`", "` + mysql_real_escape_string(videos[i].name) + `") ON DUPLICATE KEY UPDATE name="` + mysql_real_escape_string(videos[i].name) + `";`);
                 pool.query(`INSERT INTO videoID(vid, name) VALUES ("` + videos[i].vid +`", "` + mysql_real_escape_string(videos[i].name) + `") ON DUPLICATE KEY UPDATE name="` + mysql_real_escape_string(videos[i].name) + `";`, function(err, response) {
                     if(err) {
                         console.log("Inserting " + videos[i].vid + " into videoID failed");
@@ -138,24 +137,53 @@ module.exports = {
                     }
                 });
     
-                console.log("Trying: " + `INSERT IGNORE INTO regionTrending(cid, vid) VALUES ("` + cid +`", "` + videos[i].vid + `");`);
                 pool.query(`INSERT IGNORE INTO regionTrending(cid, vid) VALUES ("` + cid +`", "` + videos[i].vid + `");`, function(err, response) {
                     if(err) {
-                        console.log("Inserting (cid, vid) = (" + cid + ", " + vid + ") into regionTrending failed");
+                        console.log("Inserting (cid, vid) = (" + cid + ", " + videos[i].vid + ") into regionTrending failed");
                         throw err;
                     } else {
-                        console.log("Inserting (cid, vid) = (" + cid + ", " + vid + ") into regionTrending succeded");
+                        console.log("Inserting (cid, vid) = (" + cid + ", " + videos[i].vid + ") into regionTrending succeded");
                     }
                 });
             }
+        });
+    },
+    saveVideoStat: async function(videoStats) {
+        let date = new Date();
+        let strDate = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
+        
+        videoStats.forEach((statistics, vid) => {
+            console.log("Video: " + vid + ": " + statistics.viewCount);
+            pool.query(`INSERT INTO videoStat(vid, date, views) VALUES ("${vid}", "${strDate}", ${statistics.viewCount}) ON DUPLICATE KEY UPDATE views=${statistics.viewCount}` , function(err, response) {
+                if(err) {
+                    console.log("Updating " + vid + " views failed");
+                    throw err;
+                } else {
+                    console.log("Updating " + vid + " views succeeded");
+                }
+            });
         });
     },
     getVideos: async function() {
         let response = await pool.query(`SELECT * from videoID;`);
         return response[0];
     },
-    getTrending: async function() {
-        let response = await pool.query(`SELECT * from regionTrending;`);
+    getVideoViews: async function(vid) {
+        let response;
+        if(vid) {
+            response = await pool.query(`SELECT * from videoStat WHERE vid="${vid}";`);
+        } else {
+            response = [];
+        }
+        return response[0];
+    },
+    getTrending: async function(cid) {
+        let response;
+        if(cid) {
+            response = await pool.query(`SELECT * from regionTrending WHERE cid="${cid}";`);
+        } else {
+            response = await pool.query(`SELECT * from regionTrending;`);
+        }
         return response[0];
     }
 }

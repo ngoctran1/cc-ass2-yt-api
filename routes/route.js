@@ -6,12 +6,12 @@ router.get('/countryids', async function (req, res) {
     res.json(await sql.getRegions());
 });
 
-router.get('/trending', async function (req, res) {
-    res.json(await sql.getTrending());
+router.get('/trendingvideos', async function (req, res) {
+    res.json(await sql.getTrending(req.query.cid));
 });
 
-router.get('/videos', async function (req, res) {
-    res.json(await sql.getVideos());
+router.get('/videoviews', async function (req, res) {
+    res.json(await sql.getVideoViews(req.query.vid));
 });
 
 router.get('/history', (req, res) => {

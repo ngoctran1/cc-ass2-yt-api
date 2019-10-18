@@ -3,7 +3,7 @@ info:
   description: "API to serve data to Youtube Trending Video Map"
   title: "Youtube Trending Video Map API"
   version: "1.0.0"
-host: "<GCLOUD PROJECT ID>.appspot.com"
+host: "<GCLOUD PROJECT ID>.com"
 consumes:
 - "application/json"
 produces:
@@ -24,38 +24,42 @@ paths:
             $ref: "#/definitions/countryids"
   "/trendingvideos":
     get:
-      description: "List all trending videos being tracked by the API for given set of regions"
+      description: "List all trending videos being tracked by the API for a given country"
       operationId: "trendingvideos"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "Input requires an array of country Ids"
+        description: "Input is a country Id"
         required: true
         schema:
           $ref: "#/definitions/inputregions"
       responses:
         200:
-          description: "List of trending videos seperated into regions"
+          description: "List of trending videos for the given country"
           schema:
             $ref: "#/definitions/trendingvideos"
   "/videoviews":
     get:
-      description: "List all view data points stored by the API for given set of videos"
+      description: "List all view data points stored by the API for a given video"
       operationId: "videoviews"
+      consumes:
+      - "application/json"
       produces:
       - "application/json"
       parameters:
       - in: "body"
         name: "body"
-        description: "Input requires an array of video"
+        description: "Input is a video Id"
         required: true
         schema:
           $ref: "#/definitions/inputvideos"
       responses:
         200:
-          description: "List of trending videos seperated into regions"
+          description: "List of data points across time of the number of views of the given video"
           schema:
             $ref: "#/definitions/videoviews"
 definitions:
@@ -79,35 +83,22 @@ definitions:
     items:
       type: "object"
       properties:
-        cid:
+        vid:
           type: "string"
-        vids:
-          type: "array"
-          items:
-            type: "string"
+        name:
+          type: "string"
   videoviews:
     type: "array"
     items:
       type: "object"
       properties:
-        vid:
+        date:
           type: "string"
-        viewdata:
-          type: "array"
-          items:
-            type: "object"
-            properties:
-              date:
-                type: "string"
-                format: "date"
-              views:
-                type: "number"
-                format: "int64"
+          format: "date"
+        views:
+          type: "number"
+          format: "int64"
   inputregions:
-    type: "array"
-    items:
-      type: "string"
+    type: "string"
   inputvideos:
-    type: "array"
-    items:
-      type: "string"
+    type: "string"
