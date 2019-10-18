@@ -6,8 +6,12 @@ router.get('/countryids', async function (req, res) {
     res.json(await sql.getRegions());
 });
 
-router.get('/trendingvideos', async function (req, res) {
-    res.json(await sql.getTrending(req.query.cid));
+router.get('/toptrendingvideos', async function (req, res) {
+    res.json(await sql.getCurrentTrending(req.query.cid));
+});
+
+router.get('/alltrendingvideos', async function (req, res) {
+    res.json(await sql.getAllTrending(req.query.cid));
 });
 
 router.get('/videoviews', async function (req, res) {

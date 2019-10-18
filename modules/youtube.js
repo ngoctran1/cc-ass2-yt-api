@@ -27,30 +27,27 @@ module.exports = {
         let newVideos = new Set();
 
         for(let i in regionCodes) {
-            if(i < 10) {
-                let cid = regionCodes[i].cid;
-                queryResult = await queryYoutube(trendingURL + cid + "&key=" + API_KEY);
+            let cid = regionCodes[i].cid;
+            queryResult = await queryYoutube(trendingURL + cid + "&key=" + API_KEY);
 
-                let regionVideos = [];
-                for(let i in queryResult.items) {
-                    regionVideos.push({
-                        vid: queryResult.items[i].id,
-                        name: queryResult.items[i].snippet.title
-                    });
-                    newVideos.add({vid: queryResult.items[i].id});
-                }
-
-                result.set(cid, regionVideos);
-            } else {
-                break;
+            let regionVideos = [];
+            for(let i in queryResult.items) {
+                regionVideos.push({
+                    vid: queryResult.items[i].id,
+                    name: queryResult.items[i].snippet.title
+                });
+                newVideos.add({vid: queryResult.items[i].id});
             }
+
+            result.set(cid, regionVideos);
         }
 
         console.log(result);
         await sql.saveTrending(result);
-        this.updateVideoStat(newVideos);
+        await this.updateVideoStat(newVideos);
     },
     getRegions: async function() {
+        let regionCodes = new Map();
         result = await queryYoutube(regionURL + API_KEY);
         for(let i in result.items) {
             regionCodes.set(result.items[i].snippet.gl, result.items[i].snippet.name);

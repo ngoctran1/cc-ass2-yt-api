@@ -82,7 +82,7 @@ module.exports = {
         return;
     },
     setupVideoDB: async function() {
-        pool.query(`CREATE TABLE IF NOT EXISTS regionTrending(cid CHAR(2), vid CHAR(100), PRIMARY KEY (cid, vid), FOREIGN KEY(cid) 
+        pool.query(`CREATE TABLE IF NOT EXISTS regionTrending(cid CHAR(2), vid CHAR(100), date DATETIME, PRIMARY KEY (cid, vid), FOREIGN KEY(cid) 
         REFERENCES countryID(cid), FOREIGN KEY(vid) REFERENCES videoID(vid));`, function(err, response) {
             if(err) {
                 console.log("Creating regionTrending table failed");
@@ -128,7 +128,7 @@ module.exports = {
     saveTrending: async function(trendingVideos) {
         trendingVideos.forEach((videos, cid) => {
             for(let i in videos) {
-                pool.query(`INSERT INTO videoID(vid, name) VALUES ("` + videos[i].vid +`", "` + mysql_real_escape_string(videos[i].name) + `") ON DUPLICATE KEY UPDATE name="` + mysql_real_escape_string(videos[i].name) + `";`, function(err, response) {
+                pool.query(`INSERT INTO videoID(vid, name) VALUES ("${videos[i].vid}", "${mysql_real_escape_string(videos[i].name)}") ON DUPLICATE KEY UPDATE name="` + mysql_real_escape_string(videos[i].name) + `";`, function(err, response) {
                     if(err) {
                         console.log("Inserting " + videos[i].vid + " into videoID failed");
                         throw err;
@@ -137,7 +137,9 @@ module.exports = {
                     }
                 });
     
-                pool.query(`INSERT IGNORE INTO regionTrending(cid, vid) VALUES ("` + cid +`", "` + videos[i].vid + `");`, function(err, response) {
+                let date = new Date();
+                let strDate = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
+                pool.query(`INSERT IGNORE INTO regionTrending(cid, vid, date) VALUES ("${cid}", "${videos[i].vid}", "${strDate}");`, function(err, response) {
                     if(err) {
                         console.log("Inserting (cid, vid) = (" + cid + ", " + videos[i].vid + ") into regionTrending failed");
                         throw err;
@@ -177,10 +179,19 @@ module.exports = {
         }
         return response[0];
     },
-    getTrending: async function(cid) {
+    getCurrentTrending: async function(cid) {
         let response;
         if(cid) {
-            response = await pool.query(`SELECT * from regionTrending WHERE cid="${cid}";`);
+            response = await pool.query(`SELECT * from regionTrending WHERE cid="${cid}" ORDER BY date LIMIT 5;`);
+        } else {
+            response = await pool.query(`SELECT * from regionTrending;`);
+        }
+        return response[0];
+    },
+    getAllTrending: async function(cid) {
+        let response;
+        if(cid) {
+            response = await pool.query(`SELECT * from regionTrending WHERE cid="${cid}" ORDER BY date;`);
         } else {
             response = await pool.query(`SELECT * from regionTrending;`);
         }
