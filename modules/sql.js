@@ -60,6 +60,12 @@ async function getRegionLocation(cid) {
     return result;
 }
 
+function getDate() {
+    let date = new Date();
+    // getUTCMonth returns a zero indexed month number
+    return date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
+}
+
 module.exports = {
     setupTables: async function() {
         await pool.query(`CREATE TABLE IF NOT EXISTS countryID(cid CHAR(2), name CHAR(255), longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (cid));`, function(err, response) {
@@ -136,10 +142,8 @@ module.exports = {
                         console.log("Inserting " + videos[i].vid + " into videoID succeeded");
                     }
                 });
-    
-                let date = new Date();
-                let strDate = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
-                pool.query(`INSERT IGNORE INTO regionTrending(cid, vid, date) VALUES ("${cid}", "${videos[i].vid}", "${strDate}");`, function(err, response) {
+
+                pool.query(`INSERT IGNORE INTO regionTrending(cid, vid, date) VALUES ("${cid}", "${videos[i].vid}", "${getDate()}");`, function(err, response) {
                     if(err) {
                         console.log("Inserting (cid, vid) = (" + cid + ", " + videos[i].vid + ") into regionTrending failed");
                         throw err;
@@ -151,12 +155,9 @@ module.exports = {
         });
     },
     saveVideoStat: async function(videoStats) {
-        let date = new Date();
-        let strDate = date.getUTCFullYear() + "-" + date.getUTCMonth() + "-" + date.getUTCDate();
-        
         videoStats.forEach((statistics, vid) => {
             console.log("Video: " + vid + ": " + statistics.viewCount);
-            pool.query(`INSERT INTO videoStat(vid, date, views) VALUES ("${vid}", "${strDate}", ${statistics.viewCount}) ON DUPLICATE KEY UPDATE views=${statistics.viewCount}` , function(err, response) {
+            pool.query(`INSERT INTO videoStat(vid, date, views) VALUES ("${vid}", "${getDate()}", ${statistics.viewCount}) ON DUPLICATE KEY UPDATE views=${statistics.viewCount}` , function(err, response) {
                 if(err) {
                     console.log("Updating " + vid + " views failed");
                     throw err;
@@ -196,5 +197,8 @@ module.exports = {
             response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending;`);
         }
         return response[0];
+    },
+    sample: function() {
+        return getDate();
     }
 }

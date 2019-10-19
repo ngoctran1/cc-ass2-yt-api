@@ -33,6 +33,7 @@ async function initialiseSQL() {
 }
 
 initialiseSQL();
+console.log(sql.sample());
 setInterval(updateData, DAY_HOURS * HOUR_TO_MSEC);
 
 // Start the server
