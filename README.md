@@ -75,6 +75,6 @@ The API is now deployed. The link your API is accessed from can be found by goin
 4. Install the NodeJS modules by running the following in a terminal:
     - `npm install`
 5. Run the application by running the following in a terminal:
-    - `npm install`
+    - `npm start`
 
 The API is now running and can be accessed through the browser with a base path of `localhost:8080/`. Append any of the available routes defined in the `routes/routes.js` file to this base path to access the services.
