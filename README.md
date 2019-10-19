@@ -39,7 +39,7 @@ Before starting, ensure that you have a Google account and have created a billin
 5. Click on the **Databases** tab and create a new database.
     - Keep track of the **Instance Connection Name**.
     
-### Setup and Deploy YouTube Trending Videos API
+### Setup YouTube Trending Videos API
 1. Clone this repo.
     - In a terminal (Unix) or Git Bash (Windows): `git clone https://github.com/s3688394/cc-ass2-yt-api.git`
 2. Navigate to the **cc-ass2-yt-api** folder.
@@ -54,9 +54,27 @@ Before starting, ensure that you have a Google account and have created a billin
     - `<API KEY>` = API key from step 6 of **Enable Google Cloud APIs and setup API Key**.
     - `<USER>` and `<USER PASSWORD>` = user and password from step 4 of **Initialise SQL Database**.
     - `<INSTANCE CONNECTION NAME>` = instance connection name from step 5 of **Initialise SQL Database**.
-6. Deploy Google Cloud Endpoints configuration by running the following in a terminal:
+
+From here you can either deploy straight to Google Cloud or run the app locally:
+
+### Deploying to Google Cloud
+1. Set the Google Cloud project to be deployed to by running the following in a terminal (put your Google Cloud project Id in the placeholder):
+    -  `gcloud config set project <GCLOUD PROJECT ID>`
+2. Deploy Google Cloud Endpoints configuration by running the following in a terminal:
     - `gcloud endpoints services deploy openapi-appengine.yaml`
-7. Deploy the project to App Engine by running the following in a terminal:
+3. Deploy the project to App Engine by running the following in a terminal:
     - `gcloud app deploy`
 
 The API is now deployed. The link your API is accessed from can be found by going to the [Google Cloud Endpoints](https://console.cloud.google.com/endpoints) page and looking at **Service Name**. The available methods can be found in the **Method** section at the bottom of that page.
+
+### Running locally
+1. Download and run the Google Cloud SQL Proxy by navigating to its downloaded location and running the following in a terminal:
+    - `./cloud_sql_proxy -instances=<INSTANCE_CONNECTION_NAME>=tcp:3306`
+2. Modify the `modules/sql.js` file in the project by commenting out the `socketPath` and uncommenting in the `host` and `port` lines in the declaration of `pool`.
+3. Open a terminal and ensure you are in the application's folder.
+4. Install the NodeJS modules by running the following in a terminal:
+    - `npm install`
+5. Run the application by running the following in a terminal:
+    - `npm install`
+
+The API is now running and can be accessed through the browser with a base path of `localhost:8080/`. Append any of the available routes defined in the `routes/routes.js` file to this base path to access the services.
