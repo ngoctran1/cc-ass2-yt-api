@@ -185,7 +185,7 @@ module.exports = {
         if(cid) {
             response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending WHERE cid="${cid}" ORDER BY date LIMIT 5;`);
         } else {
-            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending;`);
+            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending ORDER BY date;`);
         }
         return response[0];
     },
@@ -194,7 +194,7 @@ module.exports = {
         if(cid) {
             response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending WHERE cid="${cid}" ORDER BY date;`);
         } else {
-            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending;`);
+            response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending ORDER BY date;`);
         }
         return response[0];
     },
