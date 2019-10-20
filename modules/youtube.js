@@ -43,7 +43,6 @@ module.exports = {
         }
 
         await sql.saveTrending(result);
-        await this.updateVideoStat(newVideos);
     },
     getRegions: async function() {
         let regionCodes = new Map();

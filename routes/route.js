@@ -18,11 +18,4 @@ router.get('/videoviews', async function (req, res) {
     res.json(await sql.getVideoViews(req.query.vid));
 });
 
-router.get('/history', (req, res) => {
-res
-    .status(200)
-    .send('History in progress.')
-    .end();
-});
-
 module.exports = router;

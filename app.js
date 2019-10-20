@@ -13,6 +13,7 @@ const HOUR_TO_MSEC = 60 * 60 * 1000;
 async function updateData() {
   await youtube.getRegions();
   await youtube.getTrending();
+  await youtube.updateVideoStat();
 }
 
 async function initialise() {
