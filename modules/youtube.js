@@ -42,7 +42,6 @@ module.exports = {
             result.set(cid, regionVideos);
         }
 
-        console.log(result);
         await sql.saveTrending(result);
         await this.updateVideoStat(newVideos);
     },
@@ -53,7 +52,7 @@ module.exports = {
             regionCodes.set(result.items[i].snippet.gl, result.items[i].snippet.name);
         }
         console.log("Received " + regionCodes.size + " regions from YouTube API");
-        sql.saveRegions(regionCodes);
+        await sql.saveRegions(regionCodes);
     },
     updateVideoStat: async function(videos) {
         console.log("Update Video Stat");
@@ -70,6 +69,6 @@ module.exports = {
             result.set(video.vid, queryResult.items[0].statistics);
         }
 
-        sql.saveVideoStat(result);
+        await sql.saveVideoStat(result);
     }
 }

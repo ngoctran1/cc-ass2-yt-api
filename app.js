@@ -13,8 +13,6 @@ const HOUR_TO_MSEC = 60 * 60 * 1000;
 async function updateData() {
   await youtube.getRegions();
   await youtube.getTrending();
-  await youtube.updateVideoStat();
-  return;
 }
 
 async function initialise() {
@@ -22,18 +20,18 @@ async function initialise() {
 
   if(regions.length == 0) {
     console.log("No regions detected, initialising...");
-    await updateData();
+    updateData();
+  } else {
+    console.log("Detected existing data.")
   }
 }
 
 async function initialiseSQL() {
-  await sql.setupTables();
-  await sql.setupVideoDB();
+  await sql.initialiseTables();
   await initialise();
 }
 
 initialiseSQL();
-console.log(sql.sample());
 setInterval(updateData, DAY_HOURS * HOUR_TO_MSEC);
 
 // Start the server

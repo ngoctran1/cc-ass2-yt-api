@@ -33,11 +33,13 @@ Before starting, ensure that you have a Google account and have created a billin
 1. Go to the [SQL Storage](https://console.cloud.google.com/sql) page.
     - Navigation Menu -> SQL
 2. Create a new instance (may take a while).
+    - Keep track of the **Instance Connection Name**.
 3. Click on this new instance in the instances list.
 4. Click on the **Users** tab and create a new user for the project.
     - Keep track of the user name and password.
 5. Click on the **Databases** tab and create a new database.
-    - Keep track of the **Instance Connection Name**.
+    - Keep track of the name you give to this database.
+    
     
 ### Setup YouTube Trending Videos API
 1. Clone this repo.
@@ -52,24 +54,24 @@ Before starting, ensure that you have a Google account and have created a billin
 5. In the above files, go through and replace the placeholders with the required values from the previous sections above:
     - `<GCLOUD PROJECT ID>` = project-id from step 3 of **Create New Google Cloud Project**.
     - `<API KEY>` = API key from step 6 of **Enable Google Cloud APIs and setup API Key**.
-    - `<USER>` and `<USER PASSWORD>` = user and password from step 4 of **Initialise SQL Database**.
-    - `<INSTANCE CONNECTION NAME>` = instance connection name from step 5 of **Initialise SQL Database**.
+    - `<DB_DATABASE>`, `<DB_USER>`, and `<DB_PASS>` = user and password from step 4 and database name from step 5 of **Initialise SQL Database**.
+    - `<INSTANCE CONNECTION NAME>` = instance connection name from step 2 of **Initialise SQL Database**.
 
 From here you can either deploy straight to Google Cloud or run the app locally:
 
 ### Deploying to Google Cloud
 1. Set the Google Cloud project to be deployed to by running the following in a terminal (put your Google Cloud project Id in the placeholder):
     -  `gcloud config set project <GCLOUD PROJECT ID>`
-2. Deploy Google Cloud Endpoints configuration by running the following in a terminal:
-    - `gcloud endpoints services deploy openapi-appengine.yaml`
-3. Deploy the project to App Engine by running the following in a terminal:
+2. Deploy the project to App Engine by running the following in a terminal:
     - `gcloud app deploy`
+    - Be patient with this step because the application will need initialise the data (does one run of pulling the YouTube API) if this is the first time deploying.
+3. Deploy Google Cloud Endpoints configuration by running the following in a terminal:
+    - `gcloud endpoints services deploy openapi-appengine.yaml`
 
 The API is now deployed. The link your API is accessed from can be found by going to the [Google Cloud Endpoints](https://console.cloud.google.com/endpoints) page and looking at **Service Name**. The available methods can be found in the **Method** section at the bottom of that page.
 
 ### Running locally
-1. Download and run the Google Cloud SQL Proxy by navigating to its downloaded location and running the following in a terminal:
-    - `./cloud_sql_proxy -instances=<INSTANCE_CONNECTION_NAME>=tcp:3306`
+1. Download and run the [Google Cloud SQL Proxy](https://cloud.google.com/sql/docs/mysql/connect-admin-proxy) using TCP sockets as described at the link.
 2. Modify the `modules/sql.js` file in the project by commenting out the `socketPath` and uncommenting in the `host` and `port` lines in the declaration of `pool`.
 3. Open a terminal and ensure you are in the application's folder.
 4. Install the NodeJS modules by running the following in a terminal:

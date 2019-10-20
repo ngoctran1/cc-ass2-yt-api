@@ -14,6 +14,7 @@ const pool = mysql.createPool({
 
     connectionLimit : 10
 });
+
 const API_KEY=process.env.API_KEY;
 
 // Reference: https://stackoverflow.com/questions/7744912/making-a-javascript-string-sql-friendly/32648526
@@ -66,9 +67,18 @@ function getDate() {
     return date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
 }
 
+// Aysnc waiting from: https://blog.risingstack.com/mastering-async-await-in-nodejs/
+function wait (timeout) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve()
+      }, timeout)
+    })
+  }
+
 module.exports = {
-    setupTables: async function() {
-        await pool.query(`CREATE TABLE IF NOT EXISTS countryID(cid CHAR(2), name CHAR(255), longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (cid));`, function(err, response) {
+    initialiseTables: async function() {
+        pool.query(`CREATE TABLE IF NOT EXISTS countryID(cid CHAR(2), name CHAR(255), longitude DOUBLE, latitude DOUBLE, PRIMARY KEY (cid));`, function(err, response) {
             if(err) {
                 throw err;
             } else {
@@ -76,7 +86,7 @@ module.exports = {
             }
         });
 
-        await pool.query(`CREATE TABLE IF NOT EXISTS videoID(vid CHAR(100), name CHAR(255), PRIMARY KEY (vid));`, function(err, response) {
+        pool.query(`CREATE TABLE IF NOT EXISTS videoID(vid CHAR(100), name CHAR(255), PRIMARY KEY (vid));`, function(err, response) {
             if(err) {
                 console.log("Creating vid table failed");
                 throw err;
@@ -85,10 +95,10 @@ module.exports = {
             }
         });
 
-        return;
-    },
-    setupVideoDB: async function() {
-        await pool.query(`CREATE TABLE IF NOT EXISTS regionTrending(cid CHAR(2), vid CHAR(100), date DATETIME, PRIMARY KEY (cid, vid), FOREIGN KEY(cid) 
+        // Wait 5 seconds to ensure the above tables exist
+        await wait(5000);
+
+        pool.query(`CREATE TABLE IF NOT EXISTS regionTrending(cid CHAR(2), vid CHAR(100), date DATETIME, PRIMARY KEY (cid, vid), FOREIGN KEY(cid) 
         REFERENCES countryID(cid), FOREIGN KEY(vid) REFERENCES videoID(vid));`, function(err, response) {
             if(err) {
                 console.log("Creating regionTrending table failed");
@@ -98,7 +108,7 @@ module.exports = {
             }
         });
 
-        await pool.query(`CREATE TABLE IF NOT EXISTS videoStat(vid CHAR(100), date DATETIME, views BIGINT, PRIMARY KEY (vid, date), FOREIGN KEY(vid) 
+        pool.query(`CREATE TABLE IF NOT EXISTS videoStat(vid CHAR(100), date DATETIME, views BIGINT, PRIMARY KEY (vid, date), FOREIGN KEY(vid) 
         REFERENCES videoID(vid));`, function(err, response) {
             if(err) {
                 console.log("Creating videoStat table failed");
@@ -107,6 +117,7 @@ module.exports = {
                 console.log("Creating videoStat table success");
             }
         });
+
         return;
     },
     getRegions: async function() {
