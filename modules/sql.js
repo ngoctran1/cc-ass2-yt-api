@@ -44,6 +44,7 @@ function mysql_real_escape_string (str) {
     });
 }
 
+// Get the longitude and latitudde of a given region
 async function getRegionLocation(cid) {
     let geocodeURL = `https://maps.googleapis.com/maps/api/geocode/json?key=${API_KEY}&components=country:${cid}`;        
     const result = await axios.get(geocodeURL)
@@ -95,7 +96,7 @@ module.exports = {
             }
         });
 
-        // Wait 5 seconds to ensure the above tables exist
+        // Wait 5 seconds to ensure the above tables exist before adding the dependent tables
         await wait(5000);
 
         pool.query(`CREATE TABLE IF NOT EXISTS regionTrending(cid CHAR(2), vid CHAR(100), date DATETIME, PRIMARY KEY (cid, vid), FOREIGN KEY(cid) 
@@ -124,6 +125,7 @@ module.exports = {
         let response = await pool.query(`SELECT * from countryID;`);
         return response[0];
     },
+    // Write all the given regions to the SQL database
     saveRegions: async function(regionCodes) {
         for(let region of regionCodes) {
             let cid = region[0];
@@ -142,6 +144,7 @@ module.exports = {
             }
         }
     },
+    // Write all the given videos to the SQL database
     saveTrending: async function(trendingVideos) {
         trendingVideos.forEach((videos, cid) => {
             for(let i in videos) {
@@ -165,6 +168,7 @@ module.exports = {
             }
         });
     },
+    // Write all the given video statistics to the SQL database
     saveVideoStat: async function(videoStats) {
         videoStats.forEach((statistics, vid) => {
             console.log("Video: " + vid + ": " + statistics.viewCount);
@@ -208,8 +212,5 @@ module.exports = {
             response = await pool.query(`SELECT * from videoID NATURAL JOIN regionTrending ORDER BY date;`);
         }
         return response[0];
-    },
-    sample: function() {
-        return getDate();
     }
 }

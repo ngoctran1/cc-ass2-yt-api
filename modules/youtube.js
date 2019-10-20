@@ -23,6 +23,7 @@ module.exports = {
     getTrending: async function(regions) {
         // Retrieve existing region codes
         let regionCodes = await sql.getRegions();
+
         let result = new Map();
         let newVideos = new Set();
 
@@ -47,9 +48,11 @@ module.exports = {
     getRegions: async function() {
         let regionCodes = new Map();
         result = await queryYoutube(regionURL + API_KEY);
+
         for(let i in result.items) {
             regionCodes.set(result.items[i].snippet.gl, result.items[i].snippet.name);
         }
+        
         console.log("Received " + regionCodes.size + " regions from YouTube API");
         await sql.saveRegions(regionCodes);
     },
