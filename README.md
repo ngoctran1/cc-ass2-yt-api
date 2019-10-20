@@ -62,11 +62,10 @@ From here you can either deploy straight to Google Cloud or run the app locally:
 ### Deploying to Google Cloud
 1. Set the Google Cloud project to be deployed to by running the following in a terminal (put your Google Cloud project Id in the placeholder):
     -  `gcloud config set project <GCLOUD PROJECT ID>`
-2. Deploy the project to App Engine by running the following in a terminal:
-    - `gcloud app deploy`
-    - Be patient with this step because the application will need initialise the data (does one run of pulling the YouTube API) if this is the first time deploying.
-3. Deploy Google Cloud Endpoints configuration by running the following in a terminal:
+2. Deploy Google Cloud Endpoints configuration by running the following in a terminal:
     - `gcloud endpoints services deploy openapi-appengine.yaml`
+3. Deploy the project to App Engine by running the following in a terminal:
+    - `gcloud app deploy`
 
 The API is now deployed. The link your API is accessed from can be found by going to the [Google Cloud Endpoints](https://console.cloud.google.com/endpoints) page and looking at **Service Name**. The available methods can be found in the **Method** section at the bottom of that page.
 
